@@ -1,4 +1,5 @@
 import type LivroDTO from "../dto/LivroDTO";
+const API_URL = import.meta.env.VITE_API_SERVER_URL;
 
 // Classe responsável por fazer requisições à API - livro
 class LivroRequests {
@@ -6,7 +7,7 @@ class LivroRequests {
     private endpointLivro;
 
     constructor() {
-        this.serverUrl = 'http://localhost:3333';
+        this.serverUrl = API_URL;
         this.endpointLivro = '/api/livros';
     }
 
@@ -79,6 +80,32 @@ class LivroRequests {
                 return false;
             }
         }
+
+        async removerLivro(id_livro: number): Promise<boolean> {
+        try {
+            const token = localStorage.getItem('token');
+            const respostaAPI = await fetch(`${this.serverUrl}${this.endpointLivro}/${id_livro}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-access-token': `${token}`
+                }
+            });
+
+            if (!respostaAPI.ok) {
+                const errorData = await respostaAPI.json().catch(() => ({}));
+                const errorMessage = errorData.mensagem || `Erro ${respostaAPI.status}: ${respostaAPI.statusText}`;
+                throw new Error(errorMessage);
+            }
+
+            console.info(`${respostaAPI.status} ${respostaAPI.statusText}`);
+
+            return true;
+        } catch (error) {
+            console.error(`Erro ao fazer consulta à API. ${error}`);
+            throw error;
+        }
+    }
 
 
 }

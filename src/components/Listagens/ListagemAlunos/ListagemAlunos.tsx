@@ -32,6 +32,25 @@ function ListagemAlunos(): JSX.Element {
 
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
+    const handleRemoverAluno = async (id_aluno: number) => {
+        const confirmar = window.confirm("Você realmente deseja remover este registro?(Essa ação é irevercivel)");
+        if (confirmar) {
+            try {
+                const sucesso = await AlunoRequests.removerAluno(id_aluno);
+                if (sucesso) {
+                    alert("Aluno removido com sucesso");
+                    setAlunos(alunos.filter(aluno => aluno.id_aluno !== id_aluno));
+                } else {
+                    alert("Não foi possível remover o registro.");
+                }
+            } catch (error) {
+                console.error("Erro ao remover aluno:", error);
+                alert("Erro ao remover aluno.");
+            }
+        }
+    };
+
+
     return (
         <main className="bg-gray-200 flex-1 flex flex-col px-4 sm:px-6 md:px-10 py-6 md:py-10 overflow-hidden"> {/* overflow-hidden no main para conter o scroll interno */}
             <div className="w-full max-w-7xl mx-auto flex flex-col sm:flex-row items-center gap-4 mb-6 md:mb-8 flex-shrink-0">
@@ -70,7 +89,8 @@ function ListagemAlunos(): JSX.Element {
                                                 <button className="w-full sm:w-auto bg-sky-100 text-sky-700 px-3 py-1.5 rounded-md text-xs md:text-sm font-medium hover:bg-sky-600 hover:text-white transition-all hover:cursor-pointer" 
                                                 onClick={() => navigate(`/detalhes/aluno/${aluno.id_aluno}`)}>Detalhes</button>
                                                 <button className="w-full sm:w-auto bg-emerald-100 text-emerald-700 px-3 py-1.5 rounded-md text-xs md:text-sm font-medium hover:bg-emerald-600 hover:text-white transition-all">Atualizar</button>
-                                                <button className="w-full sm:w-auto bg-red-100 text-red-700 px-3 py-1.5 rounded-md text-xs md:text-sm font-medium hover:bg-red-600 hover:text-white transition-all">Deletar</button>
+                                                <button className="w-full sm:w-auto bg-red-100 text-red-700 px-3 py-1.5 rounded-md text-xs md:text-sm font-medium hover:bg-red-600 hover:text-white transition-all"
+                                                 onClick={() => aluno.id_aluno && handleRemoverAluno(aluno.id_aluno)}>Deletar</button>
                                             </div>
                                         </td>
                                     </tr>

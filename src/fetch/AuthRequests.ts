@@ -1,6 +1,8 @@
 /**
  * Classe para lidar com autenticação
  */
+const API_URL = import.meta.env.VITE_API_SERVER_URL;
+
 class AuthRequests {
 
     private serverUrl: string;
@@ -11,7 +13,7 @@ class AuthRequests {
      */
     constructor() {
         // endereço do servidor
-        this.serverUrl = 'http://localhost:3333';
+        this.serverUrl = API_URL;
         // rota do servidor
         this.endpointLogin = '/api/login';
     }
